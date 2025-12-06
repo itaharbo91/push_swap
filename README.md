@@ -1,130 +1,130 @@
 # Push Swap
 
-Un algorithme de tri optimisé utilisant deux piles (stacks) et un ensemble d'opérations limitées pour réarranger efficacement une liste de nombres aléatoires.
+An optimized sorting algorithm using two stacks and a limited set of operations to efficiently arrange a list of random numbers.
 
 ## 📋 Description
 
-**Push Swap** trie une pile de nombres entiers en utilisant seulement **deux piles** (A et B) et des opérations spécifiques. L'objectif principal est d'accomplir le tri avec le **minimum de mouvements possibles**.
+**Push Swap** sorts a stack of integers using only **two stacks** (A and B) and specific operations. The main objective is to achieve sorting with the **minimum number of movements possible**.
 
-## 🎯 Objectif
+## 🎯 Objective
 
-Passer de :
+Transform from:
 ```
 Stack A: [4, 67, 3, 87, 23]
 Stack B: []
 ```
 
-À :
+To:
 ```
-Stack A: [3, 4, 23, 67, 87]  ✓ Trié
+Stack A: [3, 4, 23, 67, 87]  ✓ Sorted
 Stack B: []
 ```
 
-## 🛠️ Opérations Disponibles
+## 🛠️ Available Operations
 
 ### Swaps
-- `sa` : Permute les 2 premiers éléments de A
-- `sb` : Permute les 2 premiers éléments de B
-- `ss` : Exécute `sa` et `sb` simultanément
+- `sa` : Swap the first 2 elements of A
+- `sb` : Swap the first 2 elements of B
+- `ss` : Execute `sa` and `sb` simultaneously
 
 ### Push
-- `pa` : Pousse le premier élément de B vers A
-- `pb` : Pousse le premier élément de A vers B
+- `pa` : Push the first element from B to A
+- `pb` : Push the first element from A to B
 
 ### Rotate
-- `ra` : Décale tous les éléments de A vers le haut (le premier va en dernier)
-- `rb` : Décale tous les éléments de B vers le haut
-- `rr` : Exécute `ra` et `rb` simultanément
+- `ra` : Rotate all elements of A upward (first goes to last)
+- `rb` : Rotate all elements of B upward
+- `rr` : Execute `ra` and `rb` simultaneously
 
 ### Reverse Rotate
-- `rra` : Décale tous les éléments de A vers le bas (le dernier va en premier)
-- `rrb` : Décale tous les éléments de B vers le bas
-- `rrr` : Exécute `rra` et `rrb` simultanément
+- `rra` : Rotate all elements of A downward (last goes to first)
+- `rrb` : Rotate all elements of B downward
+- `rrr` : Execute `rra` and `rrb` simultaneously
 
-## 🧠 Ma Logique d'Algorithme
+## 🧠 Algorithm Logic
 
-### 1️⃣ Cas Spéciaux (≤ 5 éléments)
-Pour les petites listes, utilisation de tri directs optimisés :
-- **Taille 2** : Un simple swap si nécessaire
-- **Taille 3** : Combinaison de rotates et swaps (max 2 opérations)
-- **Taille 4** : Push du minimum en B, tri du reste, retour (max 6 opérations)
-- **Taille 5** : Push de 2 minimums en B, tri du reste, retour en ordre (max 12 opérations)
+### 1️⃣ Special Cases (≤ 5 elements)
+For small lists, direct optimized sorting is used:
+- **Size 2** : Simple swap if needed
+- **Size 3** : Combination of rotates and swaps (max 2 operations)
+- **Size 4** : Push minimum to B, sort the rest, return (max 6 operations)
+- **Size 5** : Push 2 minimums to B, sort the rest, return in order (max 12 operations)
 
-### 2️⃣ Cas Général (> 5 éléments) - Divide & Conquer
+### 2️⃣ General Case (> 5 elements) - Divide & Conquer
 
-#### Phase 1 : Division par la médiane
+#### Phase 1: Median-based Partition
 ```
-1. Calculer la médiane de la pile A
-2. Pousser tous les éléments < médiane vers B
-3. Pousser tous les éléments >= médiane vers B
-```
-
-#### Phase 2 : Tri via "Best Index"
-Le cœur de l'algorithme : **choisir le meilleur élément à déplacer**
-
-Pour chaque élément en B, calculer le **coût total** de déplacement :
-```
-coût = rotations_nécessaires_en_B + rotations_nécessaires_en_A
+1. Calculate the median of stack A
+2. Push all elements < median to B
+3. Push all elements >= median to B
 ```
 
-**Sélectionner l'élément avec le coût minimal** et l'insérer à la bonne position en A.
+#### Phase 2: Sorting via "Best Index"
+The core of the algorithm: **select the best element to move**
 
-#### Phase 3 : Optimisation des rotations
-Lorsque A et B ont tous deux besoin de rotations :
-- Si tous les deux ont besoin de **rotate** : utiliser `rr` (2 opérations en 1)
-- Si tous les deux ont besoin de **reverse rotate** : utiliser `rrr` (2 opérations en 1)
-
-#### Phase 4 : Finition
+For each element in B, calculate the **total cost** of movement:
 ```
-1. Pousser tous les éléments restants de B vers A
-2. Placer le minimum de A en haut (première position)
+cost = rotations_needed_in_B + rotations_needed_in_A
 ```
 
-### 📊 Exemple d'Optimisation
+**Select the element with minimal cost** and insert it at the correct position in A.
 
-Sans optimisation :
+#### Phase 3: Rotation Optimization
+When both A and B need rotations:
+- If both need **rotate** : use `rr` (2 operations in 1)
+- If both need **reverse rotate** : use `rrr` (2 operations in 1)
+
+#### Phase 4: Finalization
 ```
-ra          (10 fois)
-rb          (5 fois)
+1. Push all remaining elements from B to A
+2. Place the minimum of A at the top (first position)
+```
+
+### 📊 Optimization Example
+
+Without optimization:
+```
+ra          (10 times)
+rb          (5 times)
 pb
 ...
-Total: 15 opérations
+Total: 15 operations
 ```
 
-Avec optimisation (rr/rrr) :
+With optimization (rr/rrr):
 ```
-rr          (5 fois)
-ra          (5 fois)
+rr          (5 times)
+ra          (5 times)
 pb
 ...
-Total: 11 opérations
+Total: 11 operations
 ```
 
-## 🚀 Installation & Compilation
+## 🚀 Compilation
 
 ```bash
-# Compiler le programme principal
+# Compile the main program
 make
 
-# Compiler avec le bonus (checker program)
+# Compile with bonus (checker program)
 make bonus
 
-# Nettoyer les fichiers objets
+# Clean object files
 make clean
 
-# Nettoyer complètement
+# Complete cleanup
 make fclean
 
-# Recompiler
+# Recompile
 make re
 ```
 
-## 💻 Utilisation
+## 💻 Usage
 
-### Programme Principal
+### Main Program
 ```bash
 ./push_swap 4 67 3 87 23
-# Affiche la séquence optimale d'opérations :
+# Outputs the optimal sequence of operations:
 # pb
 # pb
 # ra
@@ -132,91 +132,91 @@ make re
 # pa
 ```
 
-Avec des paramètres en tant que chaîne :
+With parameters as a string:
 ```bash
 ./push_swap "4 67 3 87 23"
 ```
 
-### Programme Bonus - Checker
+### Bonus Program - Checker
 ```bash
 ./checker 4 67 3 87 23
-# Lit les opérations depuis l'entrée standard
-# Affiche "OK" si la liste est triée, "KO" sinon
+# Reads operations from standard input
+# Prints "OK" if sorted, "KO" otherwise
 
 echo -e "pb\npb\nra\npa\npa" | ./checker 4 67 3 87 23
 # OK
 ```
 
-## 📈 Complexité
+## 📈 Complexity
 
-- **Petites listes** (n ≤ 5) : O(1) en nombre d'opérations (max fixe)
-- **Grandes listes** (n > 5) : O(n²) en moyenne
-  - Calcul du meilleur index : O(n)
-  - Nombre d'itérations : O(n)
+- **Small lists** (n ≤ 5) : O(1) in number of operations (fixed max)
+- **Large lists** (n > 5) : O(n²) on average
+  - Best index calculation : O(n)
+  - Number of iterations : O(n)
 
-## ✨ Optimisations Appliquées
+## ✨ Applied Optimizations
 
-✅ **Utilisation de médiane** pour équilibrer la division
-✅ **Meilleur index** : sélection de l'élément au coût minimal
-✅ **Rotations doubles** (rr/rrr) pour réduire les mouvements
-✅ **Choix du sens** : rotate vs reverse_rotate basé sur la position (haut/bas de la pile)
-✅ **Gestion mémoire** : allocation dynamique, pas de fuite
+✅ **Median-based partitioning** for balanced division
+✅ **Best index** : selection of element with minimal cost
+✅ **Double rotations** (rr/rrr) to reduce movements
+✅ **Direction choice** : rotate vs reverse_rotate based on position (top/bottom of stack)
+✅ **Memory management** : dynamic allocation, no leaks
 
-## 🧪 Test
+## 🧪 Testing
 
 ```bash
-# Test simple
+# Simple test
 ./push_swap 3 2 1
 
-# Test avec nombres négatifs
+# Test with negative numbers
 ./push_swap -3 -2 -1 0 1
 
-# Test avec duplicatas (génère une erreur)
+# Test with duplicates (generates error)
 ./push_swap 1 2 2 3
-# Error (car duplicatas interdits)
+# Error (duplicates not allowed)
 
-# Test avec non-entiers (génère une erreur)
+# Test with non-integers (generates error)
 ./push_swap 1 2 abc 3
 # Error
 ```
 
-## 📚 Structure du Projet
+## 📚 Project Structure
 
 ```
 push_swap/
 ├── Makefile                    # Compilation
 ├── srcs/
-│   ├── main.c                  # Point d'entrée
-│   ├── push_swap.h             # Header principal
-│   ├── error_code.c            # Validation des inputs
-│   ├── instructions/           # Opérations (sa, sb, pa, pb, ra, rb, etc.)
+│   ├── main.c                  # Entry point
+│   ├── push_swap.h             # Main header
+│   ├── error_code.c            # Input validation
+│   ├── instructions/           # Operations (sa, sb, pa, pb, ra, rb, etc.)
 │   ├── sort/
-│   │   ├── sort_small.c        # Tri direct (n ≤ 5)
-│   │   ├── sort_all.c          # Tri par médiane et best_index
-│   │   ├── best_index.c        # Sélection du meilleur élément
-│   │   └── rotate_to_top.c     # Rotation optimisée
-│   ├── tab/                    # Parsing et conversion
-│   ├── utils/                  # Utilitaires (find_median, etc.)
-│   └── opti/                   # Optimisations (rr, rrr)
-└── bonus/                      # Programme checker
+│   │   ├── sort_small.c        # Direct sorting (n ≤ 5)
+│   │   ├── sort_all.c          # Median-based and best_index sorting
+│   │   ├── best_index.c        # Best element selection
+│   │   └── rotate_to_top.c     # Optimized rotation
+│   ├── tab/                    # Parsing and conversion
+│   ├── utils/                  # Utilities (find_median, etc.)
+│   └── opti/                   # Optimizations (rr, rrr)
+└── bonus/                      # Checker program
 ```
 
-## 🎓 École 42
+## 🎓 42 School
 
-Projet du Common Core - Cercle 2
+Common Core Project - Cercle 2
 
-## 📌 Points Clés
+## 📌 Key Points
 
-- ✅ Gestion des erreurs robuste
-- ✅ Pas de fuite mémoire
-- ✅ Optimisation maximale du nombre d'opérations
-- ✅ Code bien structuré et modulaire
-- ✅ Programme bonus (checker) pour valider les solutions
+- ✅ Robust error handling
+- ✅ No memory leaks
+- ✅ Maximum optimization of operation count
+- ✅ Well-structured and modular code
+- ✅ Bonus program (checker) to validate solutions
 
-## 👤 Auteur
+## 👤 Author
 
 [@itaharbo91](https://github.com/itaharbo91)
 
 ---
 
-**Description GitHub** : Stack-based sorting algorithm with optimized divide-and-conquer strategy using limited operations.
+**GitHub Description** : Stack-based sorting algorithm with optimized divide-and-conquer strategy using limited operations.
